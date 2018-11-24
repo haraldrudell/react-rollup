@@ -1,6 +1,6 @@
 {
   "name": "react-rollup",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Build react app using Rollup by Harald Rudell",
   "author": "Harald Rudell <harald.rudell@gmail.com> (http://haraldrudell.com)",
   "license": "ISC",
@@ -90,6 +90,7 @@
     "rollup-plugin-svg": "^1.0.1"
   },
   "files": [
-    "bin"
+    "bin",
+    "src/react/rollup.config.js"
   ]
 }
