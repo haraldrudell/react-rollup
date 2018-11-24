@@ -9,10 +9,10 @@ import { spawnAsync } from 'allspawn'
 import path from 'path'
 
 const reactDir = path.join(__dirname, 'react')
-const reactRollup = path.join(__dirname, '..', 'bin', react-rollup)
+const reactRollup = path.join(__dirname, '..', 'bin', 'react-rollup')
 
 it('Transpile ECMAScript css svg', async () => {
-  spawnAsync({
+  await spawnAsync({
     args: [reactRollup],
     echo: true,
     options: {cwd: reactDir}

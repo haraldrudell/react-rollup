@@ -12,6 +12,7 @@
     "reinstall:clean": "rimraf node_modules",
     "reinstall:install": "yarn",
     "testfsinstall": "jest --testRegex 'src/.*xtest.*'",
+    "testnpminstall": "jest --testRegex 'src/.*itest.*'",
     "pub": "yarn publish --patch --access public",
     "test": "jest"
   },

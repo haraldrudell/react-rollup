@@ -78,7 +78,7 @@ function getRollupConfig() {
         exclude: 'node_modules/**',
         // presets: [require.resolve('babel-preset-react-app')],
         presets: [
-          isEnvTest && [require('@babel/preset-env').default, {targets: {node: 'current',}}],
+          isEnvTest && [require('@babel/preset-env').default, {targets: {node: 'current'}}],
           (isEnvProduction || isEnvDevelopment) && [
             require('@babel/preset-env').default,
             {targets: {ie: 9},
