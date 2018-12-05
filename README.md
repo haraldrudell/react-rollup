@@ -2,7 +2,9 @@
 
 The React build pipeline ported to [Rollup](https://rollupjs.org)
 
-Used by [lib-create-react-app](https://www.npmjs.com/package/lib-create-react-app)
+[click for **Video presentation**, 10 min](https://youtu.be/KVaOVjiH2SQ)
+
+Used by [lib-create-react-app](https://github.com/haraldrudell/lib-create-react-app)
 
 ## © 2018-present Harald Rudell <harald.rudell@gmail.com> (http://www.haraldrudell.com)
 
@@ -10,13 +12,13 @@ Used by [lib-create-react-app](https://www.npmjs.com/package/lib-create-react-ap
 
 ### Components
 * [react-rollup](https://github.com/haraldrudell/react-rollup.git) the [Create React App](https://github.com/facebook/create-react-app) build pipeline ported to [Rollup](https://rollupjs.org)
-* [lib-create-react-app](https://www.npmjs.com/package/lib-create-react-app) that adapts, builds and publishes a React project to npm
+* [lib-create-react-app](https://github.com/haraldrudell/lib-create-react-app) that adapts, builds and publishes a React project to npm
 * [es2049package](https://github.com/haraldrudell/ECMAScript2049/tree/master/workspace/packages/es2049package) a configuration-free bundler for CommonJS and ECMAScript modules
 
 &emsp;
 
 ### Example Project
-* [demo-context-store]() a single-truth store in 94% less code lines
+* [demo-context-store](https://github.com/haraldrudell/demo-context-store.git) a single-truth store in 94% less code lines
 
 &emsp;
 
@@ -26,6 +28,6 @@ Used by [lib-create-react-app](https://www.npmjs.com/package/lib-create-react-ap
 
 &emsp;
 
-**Lib Create React App** creates shareable libraries from projects bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**[Lib Create React App](https://github.com/haraldrudell/lib-create-react-app)** creates shareable libraries from projects bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## © 2018-present Harald Rudell <harald.rudell@gmail.com> (http://www.haraldrudell.com)
