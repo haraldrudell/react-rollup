@@ -8,7 +8,7 @@ import { spawnAsync } from 'allspawn'
 
 import path from 'path'
 
-const rollupConfigJs = path.join(__dirname, '..', 'src', 'react', 'rollup.config.js')
+const rollupConfigJs = path.join(__dirname, 'rollup.config.js')
 const rollup = path.join(__dirname, '..', 'node_modules', '.bin', 'rollup')
 
 runRollup({rollup, rollupConfigJs}).catch(errorHandler)

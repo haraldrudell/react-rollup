@@ -4,6 +4,19 @@ This source code is licensed under the ISC-style license found in the LICENSE fi
 
 build a Create React App library from $PWD/src/libindex.js to $PWD/lib
 */
+import presetEnv from '@babel/preset-env'
+import presetReact from '@babel/preset-react'
+import presetTypescript from '@babel/preset-typescript'
+import flowStripTypes from '@babel/plugin-transform-flow-strip-types'
+import destructuring from '@babel/plugin-transform-destructuring'
+import decorators from '@babel/plugin-proposal-decorators'
+import classProperties from '@babel/plugin-proposal-class-properties'
+import objectRestSpread from '@babel/plugin-proposal-object-rest-spread'
+import transformRuntime from '@babel/plugin-transform-runtime'
+import reactRemovePropTypes from 'babel-plugin-transform-react-remove-prop-types'
+import syntaxDynamicImport from '@babel/plugin-syntax-dynamic-import'
+import dynamicImportNode from 'babel-plugin-dynamic-import-node'
+import macros from 'babel-plugin-macros'
 import { eslint } from 'rollup-plugin-eslint'
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
@@ -11,10 +24,17 @@ import json from 'rollup-plugin-json'
 import commonjs from 'rollup-plugin-commonjs'
 import svg from 'rollup-plugin-svg'
 import postcss from 'rollup-plugin-postcss'
+import postcssFlexbugsFixes from 'postcss-flexbugs-fixes'
+import postcssPresetEnv from 'postcss-preset-env'
 
 import path from 'path'
 
 import { readPackageJson, getExternal, formats, mergeRollups, getDirs } from '../letsroll/index.js'
+
+const formatter = require.resolve('react-dev-utils/eslintFormatter')
+const eslintPath = require.resolve('eslint')
+const eslintConfigReactApp = require.resolve('eslint-config-react-app')
+const namedAssetImport = require.resolve('babel-plugin-named-asset-import')
 
 process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
@@ -56,10 +76,10 @@ function getRollupConfig() {
       eslint({
         include: ['**/*.js', '**/*.mjs', '**/*.jsx'],
         exclude: 'node_modules/**',
-        formatter: require.resolve('react-dev-utils/eslintFormatter'),
-        eslintPath: require.resolve('eslint'),
+        formatter,
+        eslintPath,
         baseConfig: {
-          extends: [require.resolve('eslint-config-react-app')],
+          extends: [eslintConfigReactApp],
           settings: { react: { version: '999.999.999' } },
         },
         ignore: false,
@@ -78,31 +98,29 @@ function getRollupConfig() {
         exclude: 'node_modules/**',
         // presets: [require.resolve('babel-preset-react-app')],
         presets: [
-          isEnvTest && [require('@babel/preset-env').default, {targets: {node: 'current'}}],
+          isEnvTest && [presetEnv, {targets: {node: 'current'}}],
           (isEnvProduction || isEnvDevelopment) && [
-            require('@babel/preset-env').default,
+            presetEnv,
             {targets: {ie: 9},
               ignoreBrowserslistConfig: true,
               useBuiltIns: false,
               modules: false,
               exclude: ['transform-typeof-symbol'],
             }],
-          [require('@babel/preset-react').default, {
+          [presetReact, {
               development: isEnvDevelopment || isEnvTest,
               useBuiltIns: true,
             }],
-          isTypeScriptEnabled && [require('@babel/preset-typescript').default],
+          isTypeScriptEnabled && [presetTypescript],
         ].filter(Boolean), // end of presets
         plugins: [
-          isFlowEnabled && [require('@babel/plugin-transform-flow-strip-types').default,
-            false],
-          require('babel-plugin-macros'),
-          require('@babel/plugin-transform-destructuring').default,
-          isTypeScriptEnabled && [require('@babel/plugin-proposal-decorators').default, false],
-          [require('@babel/plugin-proposal-class-properties').default,
-            {loose: true}],
-          [require('@babel/plugin-proposal-object-rest-spread').default, {useBuiltIns: true}],
-          [require('@babel/plugin-transform-runtime').default,{
+          isFlowEnabled && [flowStripTypes, false],
+          macros,
+          destructuring,
+          isTypeScriptEnabled && [decorators, false],
+          [classProperties, {loose: true}],
+          [objectRestSpread, {useBuiltIns: true}],
+          [transformRuntime, {
               corejs: false,
               helpers: areHelpersEnabled,
               regenerator: true,
@@ -110,22 +128,20 @@ function getRollupConfig() {
               absoluteRuntime: absoluteRuntimePath,
             },
           ],
-          isEnvProduction && [require('babel-plugin-transform-react-remove-prop-types').default,
-            {removeImport: true}],
-          require('@babel/plugin-syntax-dynamic-import').default,
-          isEnvTest && require('babel-plugin-dynamic-import-node'),
-          [require.resolve('babel-plugin-named-asset-import'),
-            {loaderMap: {svg: {ReactComponent: '@svgr/webpack?-prettier,-svgo![path]'}}}],
+          isEnvProduction && [reactRemovePropTypes, {removeImport: true}],
+          syntaxDynamicImport,
+          isEnvTest && dynamicImportNode,
+          [namedAssetImport, {loaderMap: {svg: {ReactComponent: '@svgr/webpack?-prettier,-svgo![path]'}}}],
         ].filter(Boolean),
         overrides: [
           isFlowEnabled && {
             exclude: /\.tsx?$/,
-            plugins: [require('@babel/plugin-transform-flow-strip-types').default],
+            plugins: [flowStripTypes],
           },
           isTypeScriptEnabled && {
             test: /\.tsx?$/,
             plugins: [
-              [require('@babel/plugin-proposal-decorators').default, { legacy: true }],
+              [decorators, { legacy: true }],
             ],
           },
         ].filter(Boolean),
@@ -137,8 +153,8 @@ function getRollupConfig() {
         extensions: ['.sass', '.css', '.scss'],
         preprocessor: async (content, id) => ({ code: sass.renderSync({ file: id }).css.toString() }),
         plugins: [
-          require('postcss-flexbugs-fixes'),
-          require('postcss-preset-env')({
+          postcssFlexbugsFixes,
+          postcssPresetEnv({
             autoprefixer: {flexbox: 'no-2009'},
             stage: 3,
           }),
