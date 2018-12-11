@@ -26,10 +26,12 @@ import svg from 'rollup-plugin-svg'
 import postcss from 'rollup-plugin-postcss'
 import postcssFlexbugsFixes from 'postcss-flexbugs-fixes'
 import postcssPresetEnv from 'postcss-preset-env'
+import postcssImport from 'postcss-import'
+import postcssUrl from 'postcss-url'
 
 import path from 'path'
 
-import { readPackageJson, getExternal, formats, mergeRollups, getDirs } from '../letsroll/index.js'
+import { readPackageJson, getExternal, formats, getDirs } from '../letsroll/index.js'
 
 const formatter = require.resolve('react-dev-utils/eslintFormatter')
 const eslintPath = require.resolve('eslint')
@@ -45,8 +47,7 @@ const strings = {main: 'ext', module: 'ext', dependencies: 1, peerDependencies: 
 const dirs = getDirs()
 const {publishPackageJson: filename, publish: baseDir} = dirs
 let {main, module, dependencies, peerDependencies} = readPackageJson({filename, strings, baseDir})
-const external = getExternal({dependencies, peerDependencies})
-const rollupConfigJs = getRollupConfig()
+const x = getExternal({dependencies, peerDependencies})
 
 export default [{
   input: dirs.srcLibIndexJs,
@@ -54,9 +55,9 @@ export default [{
 },{
   input: dirs.srcLibIndexJs,
   output: {file: module, format: formats.esm.format},
-}].map(o => mergeRollups(rollupConfigJs, o))
+}].map(o => getRollupConfig({external: x, ...o}))
 
-function getRollupConfig() {
+function getRollupConfig({input, output, external}) {
   const env = process.env.BABEL_ENV || process.env.NODE_ENV;
   const isEnvTest = env === 'test'
   const isEnvProduction = env === 'production'
@@ -71,6 +72,8 @@ function getRollupConfig() {
     : undefined
 
   return {
+    input,
+    output,
     external,
     plugins: [
       eslint({
@@ -86,7 +89,7 @@ function getRollupConfig() {
         useEslintrc: false,
       }),
       resolve({
-        extensions: ['.mjs', '.js', '.json', '.jsx', '.ts', '.tsx'],
+        extensions: ['.mjs', '.js', '.json', '.jsx', '.ts', '.tsx', '.ttf'],
         customResolveOptions: {jail: process.cwd()},
       }),
       json(),
@@ -153,6 +156,13 @@ function getRollupConfig() {
         extensions: ['.sass', '.css', '.scss'],
         preprocessor: async (content, id) => ({ code: sass.renderSync({ file: id }).css.toString() }),
         plugins: [
+          postcssImport(), // resolve @import
+          postcssUrl({ // copy fonts to publish/lib
+            url: 'copy',
+            basePath: [path.resolve('src'), path.resolve('node_modules')],
+            assetsPath: path.dirname(output.file),
+          }),
+          postcssUrl({url: asset => path.basename(asset.absolutePath)}), // drop uri path
           postcssFlexbugsFixes,
           postcssPresetEnv({
             autoprefixer: {flexbox: 'no-2009'},

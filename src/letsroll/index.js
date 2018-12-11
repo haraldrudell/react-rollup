@@ -4,4 +4,3 @@ This source code is licensed under the ISC-style license found in the LICENSE fi
 */
 export * from './filePackData'
 export * from './letsroll'
-export * from './updateJson'
