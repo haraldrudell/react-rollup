@@ -35,6 +35,7 @@ const formatter = require.resolve('react-dev-utils/eslintFormatter')
 const eslintPath = require.resolve('eslint')
 const eslintConfigReactApp = require.resolve('eslint-config-react-app')
 const namedAssetImport = require.resolve('babel-plugin-named-asset-import')
+const runtime = require.resolve('@babel/runtime/package.json')
 
 process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
@@ -66,9 +67,8 @@ function getRollupConfig() {
   const useESModules = isEnvDevelopment || isEnvProduction
   const useAbsoluteRuntime = true
   const absoluteRuntimePath = useAbsoluteRuntime
-    ? path.dirname(require.resolve('@babel/runtime/package.json'))
+    ? path.dirname(runtime)
     : undefined
-
 
   return {
     external,

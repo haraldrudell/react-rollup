@@ -14,18 +14,24 @@ const binFile = Object.values(Object(Object(pjson).bin))[0]
 if (!binFile || typeof binFile !== 'string') throw new Error('package.json bin: could ot find executable name')
 const reactRollup = path.resolve(binFile)
 
-const tmpDir = path.resolve('tmp')
+const projectDir = path.resolve()
+const tmpDir = path.join(projectDir, 'tmp')
 const tmpReact = path.join(tmpDir, 'react')
-const tmpReactPublish = path.join(tmpReact, 'publish')
+const tmpReactLib = path.join(tmpReact, 'publish', 'lib')
 
 const srcReact = path.join(path.resolve(), 'src', 'react')
 
-
 it('Transpile ECMAScript css svg', async () => {
+
+  if (!await fs.pathExists(reactRollup)) throw new Error(`Executable not present: was yarn build run? ${reactRollup}`)
+
+  console.log('Preparing test project directory…')
   await fs.ensureDir(tmpDir)
   await fs.remove(tmpReact)
   await fs.copy(srcReact, tmpReact)
 
+  // build to tmp/react/publish/lib
+  console.log(`Building to: ${path.relative(projectDir, tmpReactLib)}`)
   await spawnAsync({
     args: [reactRollup],
     echo: true,
