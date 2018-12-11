@@ -17,7 +17,9 @@ const reactRollup = path.resolve(binFile)
 const projectDir = path.resolve()
 const tmpDir = path.join(projectDir, 'tmp')
 const renderDir = path.join(tmpDir, 'render')
-const buildDir = path.join(renderDir, 'publish', 'lib')
+const publishDir = path.join(renderDir, 'publish')
+const renderPjson = path.join(publishDir, 'package.json')
+const buildDir = path.join(publishDir, 'lib')
 const craName = 'cra'
 const craDir = path.join(renderDir, craName)
 const craSrcDir = path.join(craDir, 'src')
@@ -48,6 +50,9 @@ it('Transpile ECMAScript css svg', async () => {
   await fs.ensureDir(tmpDir)
   await fs.remove(renderDir)
   await fs.copy(srcReact, renderDir)
+  const pFile = JSON.parse(await fs.readFile(renderPjson, 'utf8'))
+  pFile.name += '-render'
+  await fs.writeFile(renderPjson, JSON.stringify(pFile, null, '\x20\x20'))
 
   // build to tmp/render/publish/lib
   console.log(`Building to: ${path.relative(projectDir, buildDir)}`)

@@ -17,7 +17,9 @@ const reactRollup = path.resolve(binFile)
 const projectDir = path.resolve()
 const tmpDir = path.join(projectDir, 'tmp')
 const tmpReact = path.join(tmpDir, 'react')
-const tmpReactLib = path.join(tmpReact, 'publish', 'lib')
+const publishDir = path.join(tmpReact, 'publish')
+const reactPjson = path.join(publishDir, 'package.json')
+const tmpReactLib = path.join(publishDir, 'lib')
 
 const srcReact = path.join(path.resolve(), 'src', 'react')
 
@@ -29,6 +31,9 @@ it('Transpile ECMAScript css svg', async () => {
   await fs.ensureDir(tmpDir)
   await fs.remove(tmpReact)
   await fs.copy(srcReact, tmpReact)
+  const pFile = JSON.parse(await fs.readFile(reactPjson, 'utf8'))
+  pFile.name += '-test'
+  await fs.writeFile(reactPjson, JSON.stringify(pFile, null, '\x20\x20'))
 
   // build to tmp/react/publish/lib
   console.log(`Building to: ${path.relative(projectDir, tmpReactLib)}`)

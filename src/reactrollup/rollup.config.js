@@ -157,9 +157,8 @@ function getRollupConfig({input, output, external}) {
         preprocessor: async (content, id) => ({ code: sass.renderSync({ file: id }).css.toString() }),
         plugins: [
           postcssImport(), // resolve @import
-          postcssUrl({ // copy fonts to publish/lib
+          postcssUrl({ // copy assets/fonts from their absolute path to publish/lib
             url: 'copy',
-            basePath: [path.resolve('src'), path.resolve('node_modules')],
             assetsPath: path.dirname(output.file),
           }),
           postcssUrl({url: asset => path.basename(asset.absolutePath)}), // drop uri path
