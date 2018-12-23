@@ -4,7 +4,7 @@ This source code is licensed under the ISC-style license found in the LICENSE fi
 
 build a Create React App library from $PWD/src/libindex.js to $PWD/lib
 */
-import { spawnAsync } from 'allspawn'
+import {spawnAsync} from 'allspawn'
 
 import path from 'path'
 

@@ -1,16 +1,18 @@
 /*
 © 2018-present Harald Rudell <harald.rudell@gmail.com> (http://www.haraldrudell.com)
 This source code is licensed under the ISC-style license found in the LICENSE file in the root directory of this source tree.
+
+build a rollup preset at lib/
 */
-import { shebang, chmod } from 'rollup-plugin-thatworks'
-import json from '../package.json'
+import presetEsNext from '../rollupPresetEsNext'
+import json from '../../package.json'
 
 import path from 'path'
 
-const {bin, name, dependencies} = Object(json)
-const input = String(name || '')
-const file = String(Object(bin)[name] || '')
-const format = 'cjs'
+const {module, dependencies} = Object(json)
+if (!module || typeof module !== 'string') throw new Error('package.json module not non-empty string')
+const file = path.extname(module) ? module : module + '.js'
+const format = 'esm'
 const external = ['path'].concat(Object.keys(Object(dependencies)))
 
 const dirs = {
@@ -20,12 +22,12 @@ Object.assign(dirs, {
   src: path.join(dirs.project, 'src'),
 })
 Object.assign(dirs, {
-  srcIndexJs: path.join(dirs.src, input),
+  srcPresetJs: path.join(dirs.src, 'reactRollupPreset'),
 })
 
 export default {
-  input: dirs.srcIndexJs,
+  input: dirs.srcPresetJs,
   output: {file, format},
   external,
-  plugins: [shebang(), chmod()],
+  plugins: presetEsNext(),
 }

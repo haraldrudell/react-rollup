@@ -7,6 +7,8 @@ build a Create React App library from $PWD/src/libindex.js to $PWD/lib
 import { spawnAsync } from 'allspawn'
 import fs from 'fs-extra'
 
+//import binRollup from '../bin/rollup.config'
+
 import path from 'path'
 
 import pjson from '../package.json'
@@ -22,7 +24,11 @@ const reactPjson = path.join(publishDir, 'package.json')
 const tmpReactLib = path.join(publishDir, 'lib')
 
 const srcReact = path.join(path.resolve(), 'src', 'react')
-
+/*
+it('Has exports', () => {
+  console.log(binRollup)
+})
+*/
 it('Transpile ECMAScript css svg', async () => {
 
   if (!await fs.pathExists(reactRollup)) throw new Error(`Executable not present: was yarn build run? ${reactRollup}`)
